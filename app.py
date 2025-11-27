@@ -75,41 +75,60 @@ html = html.replace(
 # ------------------ JS: INTERCEPT THE LOGIN FORM ------------------
 login_js = f"""
 <script>
-document.addEventListener('DOMContentLoaded', function() {{
-    // select the login form
-    var form = document.querySelector('form.login-form');
-    if (!form) return;
-
-    form.addEventListener('submit', function(e) {{
-        e.preventDefault(); // stop default POST /login
-
-        var emailInput = form.querySelector('input[name="email"]');
-        var passwordInput = form.querySelector('input[name="password"]');
-
-        if (!emailInput || !passwordInput) {{
-            alert('Login fields not found.');
-            return;
+(function() {{
+    // Try to attach immediately after script loads
+    function attachHandler() {{
+        var form = document.querySelector('form.login-form');
+        if (!form) {{
+            return false;  // form not yet in DOM
         }}
 
-        var userEmail = emailInput.value;
-        var userPassword = passwordInput.value;
+        // Avoid double-binding
+        if (form.__synapseLoginAttached) return true;
+        form.__synapseLoginAttached = true;
 
-        var defaultEmail = 'admin@niit.com';
-        var defaultPassword = '12345';
+        form.addEventListener('submit', function(e) {{
+            e.preventDefault(); // stop normal POST
 
-        if (userEmail === defaultEmail && userPassword === defaultPassword) {{
-            // ✅ Redirect full tab to your dashboard
-            window.top.location.href = '{DASHBOARD_URL}';
-        }} else {{
-            var err = document.getElementById('errorBox');
-            if (err) {{
-                err.style.display = 'block';
-            }} else {{
-                alert('Invalid email or password');
+            // Select by type to be robust
+            var emailInput = form.querySelector('input[type="email"]');
+            var passwordInput = form.querySelector('input[type="password"]');
+
+            if (!emailInput || !passwordInput) {{
+                alert('Login fields not found.');
+                return;
             }}
-        }}
-    }});
-}});
+
+            var userEmail = emailInput.value;
+            var userPassword = passwordInput.value;
+
+            var defaultEmail = 'admin@niit.com';
+            var defaultPassword = '12345';
+
+            if (userEmail === defaultEmail && userPassword === defaultPassword) {{
+                // ✅ Redirect full tab to your dashboard
+                window.top.location.href = '{DASHBOARD_URL}';
+            }} else {{
+                var err = document.getElementById('errorBox');
+                if (err) {{
+                    err.style.display = 'block';
+                }} else {{
+                    alert('Invalid email or password');
+                }}
+            }}
+        }});
+
+        return true;
+    }}
+
+    // Try now
+    if (!attachHandler()) {{
+        // If form not found yet, try again shortly
+        document.addEventListener('DOMContentLoaded', attachHandler);
+        window.addEventListener('load', attachHandler);
+        setTimeout(attachHandler, 500);
+    }}
+}})();
 </script>
 """
 
