@@ -2,10 +2,9 @@ import streamlit as st
 import streamlit.components.v1 as components
 import base64
 
-# 🔹 Where to go AFTER successful login
-#     → your System Dashboard page (the screenshot you sent)
-# NOTE: use the ROOT dashboard URL, not the probability link.
-DASHBOARD_URL = "https://synapse1023-6d63jya1k-utkarsh-s-projects-51b8a251.vercel.app/"
+# ✅ Where to go AFTER successful login
+#    → your System Dashboard page (the one in the screenshot)
+DASHBOARD_URL = "https://synapse1023-6d63jya1k-utkarsh-s-projects-51b8a251.vercel.app/analytics"
 
 st.set_page_config(
     page_title="Brake Shoe & Brake Pad Portal",
@@ -38,7 +37,7 @@ footer {visibility: hidden;}
 
 # ------------------ FILE PATHS (ROOT ONLY) ------------------
 LOGO_PATH = "logo.png"
-BG_PATH = "abstract-flowing-neon-wave-background_53876-101942.jpg"   # must match your repo filename EXACTLY
+BG_PATH = "abstract-flowing-neon-wave-background_53876-101942.jpg"   # must match filename in repo
 
 # ------------------ LOAD IMAGES ------------------
 with open(LOGO_PATH, "rb") as f:
@@ -86,7 +85,7 @@ function validateLogin() {{
     const userPassword = document.getElementById("password").value;
 
     if (userEmail === defaultEmail && userPassword === defaultPassword) {{
-        // ✅ After login: open your System Dashboard (not external tools)
+        // ✅ After login: open your System Dashboard on Vercel (/analytics)
         window.top.location.href = "{DASHBOARD_URL}";
     }} else {{
         var err = document.getElementById("errorBox");
