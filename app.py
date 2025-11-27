@@ -3,7 +3,6 @@ import streamlit.components.v1 as components
 import base64
 
 # ✅ Where to go AFTER successful login
-#    → your System Dashboard page (the one in the screenshot)
 DASHBOARD_URL = "https://synapse1023-6d63jya1k-utkarsh-s-projects-51b8a251.vercel.app/analytics"
 
 st.set_page_config(
@@ -37,7 +36,7 @@ footer {visibility: hidden;}
 
 # ------------------ FILE PATHS (ROOT ONLY) ------------------
 LOGO_PATH = "logo.png"
-BG_PATH = "abstract-flowing-neon-wave-background_53876-101942.jpg"   # must match filename in repo
+BG_PATH = "abstract-flowing-neon-wave-background_53876-101942.jpg"   # make sure filename matches
 
 # ------------------ LOAD IMAGES ------------------
 with open(LOGO_PATH, "rb") as f:
@@ -73,30 +72,47 @@ html = html.replace(
     f'src="data:image/png;base64,{logo_b64}"'
 )
 
-# ------------------ OVERRIDE LOGIN FUNCTION ------------------
-# This defines validateLogin() used by your form in index.html
+# ------------------ INTERCEPT FORM SUBMIT ------------------
+# We ignore whatever validateLogin() is in index.html and attach our own handler
 login_js = f"""
 <script>
-function validateLogin() {{
-    const defaultEmail = "admin@niit.com";
-    const defaultPassword = "12345";
+document.addEventListener('DOMContentLoaded', function() {{
+    // assume there is only one form on the page (the login form)
+    var form = document.querySelector('form');
+    if (!form) return;
 
-    const userEmail = document.getElementById("email").value;
-    const userPassword = document.getElementById("password").value;
+    // disable any existing onsubmit handler to avoid conflicts
+    form.onsubmit = function(e) {{ e.preventDefault(); }};
 
-    if (userEmail === defaultEmail && userPassword === defaultPassword) {{
-        // ✅ After login: open your System Dashboard on Vercel (/analytics)
-        window.top.location.href = "{DASHBOARD_URL}";
-    }} else {{
-        var err = document.getElementById("errorBox");
-        if (err) {{
-            err.style.display = "block";
-        }} else {{
-            alert("Invalid email or password");
+    form.addEventListener('submit', function(e) {{
+        e.preventDefault();  // stop the page from reloading
+
+        var emailInput = document.getElementById('email');
+        var passwordInput = document.getElementById('password');
+        if (!emailInput || !passwordInput) {{
+            alert('Login form fields not found.');
+            return;
         }}
-    }}
-    return false; // stop normal form submit
-}}
+
+        var userEmail = emailInput.value;
+        var userPassword = passwordInput.value;
+
+        var defaultEmail = 'admin@niit.com';
+        var defaultPassword = '12345';
+
+        if (userEmail === defaultEmail && userPassword === defaultPassword) {{
+            // ✅ Redirect full browser tab to your dashboard
+            window.top.location.href = '{DASHBOARD_URL}';
+        }} else {{
+            var err = document.getElementById('errorBox');
+            if (err) {{
+                err.style.display = 'block';
+            }} else {{
+                alert('Invalid email or password');
+            }}
+        }}
+    }});
+}});
 </script>
 """
 
