@@ -8,7 +8,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Remove Streamlit chrome and padding
+# ---- Remove Streamlit chrome and padding ----
 st.markdown("""
 <style>
 html, body, [class*="css"] {
@@ -31,18 +31,26 @@ footer {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
-# ---- Load images as Base64 ----
-with open("New folder/logo.png", "rb") as f:
+# ---------- 1) Filenames IN REPO ROOT ----------
+LOGO_PATH = "logo.png"  # must exist in the repo root
+
+# 🔴 VERY IMPORTANT:
+# Go to your repo, copy the exact name of your neon background file
+# (the one starting with "abstract-flowing-neon-wave-...")
+BG_PATH = "abstract-flowing-neon-wave-background_53876-101942.jpg"
+
+# ---------- 2) Load images as Base64 ----------
+with open(LOGO_PATH, "rb") as f:
     logo_b64 = base64.b64encode(f.read()).decode()
 
-with open("New folder/abstract-flowing-neon-wave-background_53876-101942.jpg", "rb") as f:
+with open(BG_PATH, "rb") as f:
     bg_b64 = base64.b64encode(f.read()).decode()
 
-# ---- Load original CSS ----
+# ---------- 3) Load CSS ----------
 with open("styles.css", "r", encoding="utf-8") as f:
     css = f.read()
 
-# Add background overlay using pseudo-element so layout is unchanged
+# Add neon background via ::before so layout from CSS stays the same
 css += f"""
 body::before {{
     content: "";
@@ -51,24 +59,4 @@ body::before {{
     z-index: -1;
     background:
         linear-gradient(0deg, rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-        url("data:image/jpeg;base64,{bg_b64}") no-repeat center center fixed;
-    background-size: cover;
-}}
-"""
-
-# ---- Load HTML ----
-with open("index.html", "r", encoding="utf-8") as f:
-    html = f.read()
-
-# Replace logo path by Base64 data URL
-html = html.replace(
-    'src="logo.png"',
-    f'src="data:image/png;base64,{logo_b64}"'
-).replace(
-    'src="./New folder/logo.png"',
-    f'src="data:image/png;base64,{logo_b64}"'
-)
-
-# ---- Combine and render ----
-final_html = f"<style>{css}</style>\n{html}"
-components.html(final_html, height=900, scrolling=False)
+        url("data:image/jpeg;base64,{bg_b64}"_
