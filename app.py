@@ -2,7 +2,7 @@ import streamlit as st
 import streamlit.components.v1 as components
 import base64
 
-# ✅ Where to go AFTER successful login
+# ✅ URL of your System Dashboard (the big purple header page)
 DASHBOARD_URL = "https://synapse1023-6d63jya1k-utkarsh-s-projects-51b8a251.vercel.app/analytics"
 
 st.set_page_config(
@@ -66,31 +66,28 @@ body::before {{
 with open("index.html", "r", encoding="utf-8") as f:
     html = f.read()
 
-# inline logo image so it works on Streamlit Cloud
+# inline logo image
 html = html.replace(
     'src="logo.png"',
     f'src="data:image/png;base64,{logo_b64}"'
 )
 
-# ------------------ INTERCEPT FORM SUBMIT ------------------
-# We ignore whatever validateLogin() is in index.html and attach our own handler
+# ------------------ JS: INTERCEPT THE LOGIN FORM ------------------
 login_js = f"""
 <script>
 document.addEventListener('DOMContentLoaded', function() {{
-    // assume there is only one form on the page (the login form)
-    var form = document.querySelector('form');
+    // select the login form
+    var form = document.querySelector('form.login-form');
     if (!form) return;
 
-    // disable any existing onsubmit handler to avoid conflicts
-    form.onsubmit = function(e) {{ e.preventDefault(); }};
-
     form.addEventListener('submit', function(e) {{
-        e.preventDefault();  // stop the page from reloading
+        e.preventDefault(); // stop default POST /login
 
-        var emailInput = document.getElementById('email');
-        var passwordInput = document.getElementById('password');
+        var emailInput = form.querySelector('input[name="email"]');
+        var passwordInput = form.querySelector('input[name="password"]');
+
         if (!emailInput || !passwordInput) {{
-            alert('Login form fields not found.');
+            alert('Login fields not found.');
             return;
         }}
 
@@ -101,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {{
         var defaultPassword = '12345';
 
         if (userEmail === defaultEmail && userPassword === defaultPassword) {{
-            // ✅ Redirect full browser tab to your dashboard
+            // ✅ Redirect full tab to your dashboard
             window.top.location.href = '{DASHBOARD_URL}';
         }} else {{
             var err = document.getElementById('errorBox');
