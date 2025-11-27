@@ -2,6 +2,11 @@ import streamlit as st
 import streamlit.components.v1 as components
 import base64
 
+# 🔹 Where to go AFTER successful login
+#     → your System Dashboard page (the screenshot you sent)
+# NOTE: use the ROOT dashboard URL, not the probability link.
+DASHBOARD_URL = "https://synapse1023-6d63jya1k-utkarsh-s-projects-51b8a251.vercel.app/"
+
 st.set_page_config(
     page_title="Brake Shoe & Brake Pad Portal",
     layout="wide",
@@ -33,7 +38,7 @@ footer {visibility: hidden;}
 
 # ------------------ FILE PATHS (ROOT ONLY) ------------------
 LOGO_PATH = "logo.png"
-BG_PATH = "abstract-flowing-neon-wave-background_53876-101942.jpg"   # ✅ must match your repo filename EXACTLY
+BG_PATH = "abstract-flowing-neon-wave-background_53876-101942.jpg"   # must match your repo filename EXACTLY
 
 # ------------------ LOAD IMAGES ------------------
 with open(LOGO_PATH, "rb") as f:
@@ -63,11 +68,39 @@ body::before {{
 with open("index.html", "r", encoding="utf-8") as f:
     html = f.read()
 
+# inline logo image so it works on Streamlit Cloud
 html = html.replace(
     'src="logo.png"',
     f'src="data:image/png;base64,{logo_b64}"'
 )
 
+# ------------------ OVERRIDE LOGIN FUNCTION ------------------
+# This defines validateLogin() used by your form in index.html
+login_js = f"""
+<script>
+function validateLogin() {{
+    const defaultEmail = "admin@niit.com";
+    const defaultPassword = "12345";
+
+    const userEmail = document.getElementById("email").value;
+    const userPassword = document.getElementById("password").value;
+
+    if (userEmail === defaultEmail && userPassword === defaultPassword) {{
+        // ✅ After login: open your System Dashboard (not external tools)
+        window.top.location.href = "{DASHBOARD_URL}";
+    }} else {{
+        var err = document.getElementById("errorBox");
+        if (err) {{
+            err.style.display = "block";
+        }} else {{
+            alert("Invalid email or password");
+        }}
+    }}
+    return false; // stop normal form submit
+}}
+</script>
+"""
+
 # ------------------ RENDER ------------------
-final_html = f"<style>{css}</style>\n{html}"
+final_html = f"<style>{css}</style>\n{html}\n{login_js}"
 components.html(final_html, height=900, scrolling=False)
