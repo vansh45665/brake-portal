@@ -1,0 +1,159 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+/* base body styling; background image will be added via ::before in app.py */
+body {
+    min-height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: #05060a;   /* dark base; pseudo-element draws the neon image */
+    color: white;
+}
+
+/* NAVBAR */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 22px 80px;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.nav-logo {
+    height: 58px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #f4f4f4;
+    font-size: 1rem;
+    padding: 6px 14px;
+    border-radius: 6px;
+}
+
+.nav-links a.active {
+    border: 1px solid #fff;
+}
+
+/* MAIN LAYOUT (matching your “good” screenshot) */
+.main-layout {
+    height: calc(100vh - 110px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 230px;
+    padding: 0 80px;
+}
+
+/* LEFT WELCOME SECTION */
+.welcome-section {
+    max-width: 600px;
+}
+
+.welcome-section h1 {
+    font-size: 3.8rem;
+    margin-bottom: 15px;
+}
+
+.welcome-section h2 {
+    font-size: 2rem;
+    margin-bottom: 22px;
+}
+
+.welcome-section p {
+    font-size: 1.12rem;
+    line-height: 1.8;
+    margin-bottom: 30px;
+    max-width: 580px;
+}
+
+/* SIGN-IN CARD */
+.signin-card {
+    width: 480px;
+    padding: 50px 45px;
+    border-radius: 20px;
+
+    background: radial-gradient(circle at top left,
+                rgba(255, 255, 255, 0.15),
+                rgba(6, 6, 22, 0.95));
+
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+.signin-card h2 {
+    font-size: 2.2rem;
+    margin-bottom: 30px;
+}
+
+/* INPUT FORM */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    height: 48px;
+    border-radius: 9px;
+    border: 1px solid #444;
+    background: #0a0a13;
+}
+
+.input-wrapper input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 14px;
+    font-size: 1.05rem;
+    color: white;
+}
+
+.input-wrapper:focus-within {
+    border-color: #ff6a3c;
+    box-shadow: 0 0 4px #ff6a3c;
+}
+
+.input-icon {
+    margin-right: 8px;
+    opacity: 0.8;
+}
+
+/* SUBMIT BUTTON */
+.btn-primary {
+    margin-top: 15px;
+    width: 100%;
+    padding: 14px;
+    font-size: 1.18rem;
+    font-weight: 600;
+    cursor: pointer;
+
+    background: linear-gradient(90deg, #ff2965, #ff7539);
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+}
+
+/* ERROR BOX */
+.error-box {
+    color: #ff8080;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+}

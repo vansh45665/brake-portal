@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Brake Shoe & Brake Pad Portal</title>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-left">
+        <!-- src will be replaced with Base64 by app.py -->
+        <img src="logo.png" alt="NIIT University" class="nav-logo">
+    </div>
+
+    <nav class="nav-links">
+        <a href="#" class="active">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
+
+<main class="main-layout">
+
+    <!-- LEFT SECTION -->
+    <section class="welcome-section">
+        <h1>Welcome!</h1>
+        <h2>Brake Shoe & Brake Pad Portal</h2>
+
+        <p>
+            Access analytics, reports and quality insights for brake shoes and
+            brake pads. Sign in to manage data, review predictions and 
+            monitor production health.
+        </p>
+    </section>
+
+    <!-- RIGHT SECTION – SIGN IN -->
+    <section class="signin-card">
+        <h2>Sign In</h2>
+
+        <div id="errorBox" class="error-box" style="display:none;">
+            Invalid email or password.
+        </div>
+
+        <form class="login-form" onsubmit="return validateLogin();">
+
+            <label>
+                Email
+                <div class="input-wrapper">
+                    <span class="input-icon">@</span>
+                    <input type="email" id="email" required>
+                </div>
+            </label>
+
+            <label>
+                Password
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" required>
+                </div>
+            </label>
+
+            <button type="submit" class="btn-primary">Sign In</button>
+
+        </form>
+    </section>
+
+</main>
+
+<script>
+function validateLogin() {
+    const defaultEmail = "admin@niit.com";
+    const defaultPassword = "12345";
+
+    const userEmail = document.getElementById("email").value;
+    const userPassword = document.getElementById("password").value;
+
+    if (userEmail === defaultEmail && userPassword === defaultPassword) {
+        window.location.href = "http://localhost:3000"; // your target page
+    } else {
+        document.getElementById("errorBox").style.display = "block";
+    }
+    return false;
+}
+</script>
+
+</body>
+</html>
